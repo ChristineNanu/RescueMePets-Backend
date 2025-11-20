@@ -90,8 +90,11 @@ def get_animals(db: Session = Depends(get_db)):
 
 @app.get("/centers", response_model=list[Center])
 def get_centers(db: Session = Depends(get_db)):
-    centers = db.query(CenterModel).all()
-    return centers
+    try:
+        centers = db.query(CenterModel).all()
+        return centers
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/adopt")
 def adopt(adoption: AdoptionCreate, db: Session = Depends(get_db)):
